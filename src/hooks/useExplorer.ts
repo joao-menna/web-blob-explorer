@@ -1,10 +1,15 @@
 import { getBlobServiceClient } from '../functions/getBlobServiceClient'
+import { BlobItem, BlobPrefix } from '@azure/storage-blob'
 import { setUrlPrefix } from '../functions/setUrlPrefix'
 import { useContext, useEffect, useState } from 'react'
+import { LOCAL, LOCAL_ADDRESS } from '../constants/system'
 import { PREFIX } from '../constants/urlSearchParams'
 import { DELIMITER } from '../constants/Breadcrumbs'
+import { CONTAINER } from '../constants/blobStorage'
 import { MainContext } from '../contexts/main'
 import { File } from '../interfaces/Folder'
+
+type BlobItemOrPrefix = ({ kind: 'blob' } & BlobItem) | ({ kind: 'prefix' } & BlobPrefix)
 
 export function useExplorer() {
   const [blobs, setBlobs] = useState<File[]>([])
@@ -33,45 +38,69 @@ export function useExplorer() {
     setLoading(true)
     setBlobs([])
 
-    // const blobServiceClient = getBlobServiceClient()
-    // const containerClient = blobServiceClient.getContainerClient(CONTAINER)
+    let blobServiceClient
+    let containerClient
+    let response
 
-    // temp
-    const queryPrefix = `prefix=${currentFolder}`
-    const query: string[] = []
-    if (queryPrefix) query.push(queryPrefix)
-    const request = await fetch(`http://localhost:8080/?${query.join('&')}`)
-    const response = await request.json()
+    if (!LOCAL) {
+      blobServiceClient = getBlobServiceClient()
+      containerClient = blobServiceClient.getContainerClient(CONTAINER)
+    } else {
+      const queryPrefix = `prefix=${currentFolder}`
+      const query: string[] = []
+      if (queryPrefix) query.push(queryPrefix)
 
-    try {
-      const filesAndFolders: File[] = []
+      const request = await fetch(`${LOCAL_ADDRESS}/?${query.join('&')}`)
+      response = await request.json()
+    }
 
-      // const blobsByHierarchy = containerClient
-      //   .listBlobsByHierarchy('/', { prefix: currentFolder })
+    const filesAndFolders: File[] = []
 
-      // for await (const blob of blobsByHierarchy) {
-      // temp
-      for (const blob of response) {
-        if (blob.kind === 'prefix') {
-          filesAndFolders.push({
-            type: 'folder',
-            name: blob.name
-          })
-          continue
-        }
+    const pushFilesAndFolders = (blob: BlobItemOrPrefix) => {
+      if (blob.kind === 'prefix') {
+        filesAndFolders.push({
+          type: 'folder',
+          name: blob.name
+        })
+        return
+      }
 
-        if (blob.kind === 'blob') {
-          const file: File = {
+      if (blob.kind === 'blob') {
+        let file: File
+        if (!LOCAL) {
+          file = {
             type: 'file',
             name: blob.name,
-            // lastModified: blob.properties.lastModified.toISOString(),
-            // temp
-            lastModified: blob.properties.lastModified,
+            lastModified: blob.properties.lastModified.toISOString(),
             contentLength: blob.properties.contentLength,
             contentType: blob.properties.contentType
           }
+        } else {
+          file = {
+            type: 'file',
+            name: blob.name,
+            lastModified: blob.properties.lastModified.toString(),
+            contentLength: blob.properties.contentLength,
+            contentType: blob.properties.contentType
+          }
+        }
 
-          filesAndFolders.push(file)
+        filesAndFolders.push(file)
+      }
+    }
+
+    try {
+
+      if (!LOCAL) {
+        const blobsByHierarchy = containerClient!
+          .listBlobsByHierarchy('/', { prefix: currentFolder })
+
+        for await (const blob of blobsByHierarchy) {
+          pushFilesAndFolders(blob)
+        }
+      } else {
+        for (const blob of response) {
+          pushFilesAndFolders(blob)
         }
       }
 

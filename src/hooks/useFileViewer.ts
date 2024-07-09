@@ -1,4 +1,5 @@
 import { getBlobServiceClient } from '../functions/getBlobServiceClient'
+import { LOCAL, LOCAL_ADDRESS } from '../constants/system'
 import { CONTAINER } from '../constants/blobStorage'
 import { MainContext } from '../contexts/main'
 import { useContext, useEffect } from 'react'
@@ -20,16 +21,29 @@ export function useFileViewer() {
       return
     }
 
-    // const blobServiceClient = getBlobServiceClient()
-    // const containerClient = blobServiceClient.getContainerClient(CONTAINER)
-    // const blobClient = containerClient.getBlobClient(viewingFile.name)
+    let downloaded
 
-    // const download = await blobClient.download()
-    // const downloaded = await download.blobBody
+    if (!LOCAL) {
+      try {
+        const blobServiceClient = getBlobServiceClient()
+        const containerClient = blobServiceClient.getContainerClient(CONTAINER)
+        const blobClient = containerClient.getBlobClient(viewingFile.name)
 
-    // temp
-    const request = await fetch(`http://localhost:8080/getBlob?name=${viewingFile.name}`)
-    const downloaded = await request.blob()
+        const download = await blobClient.download()
+        downloaded = await download.blobBody
+      } catch (err) {
+        console.error('Error downloading blob', err)
+      }
+    }
+
+    if (LOCAL) {
+      try {
+        const request = await fetch(`${LOCAL_ADDRESS}/getBlob?name=${viewingFile.name}`)
+        downloaded = await request.blob()
+      } catch (err) {
+        console.error('Error downloading blob', err)
+      }
+    }
 
     if (!downloaded) {
       return
