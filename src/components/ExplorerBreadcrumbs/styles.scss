@@ -1,0 +1,11 @@
+.breadcrumb-link {
+    cursor: pointer;
+    user-select: none;
+    color: rgb(167, 167, 167);
+    text-decoration: none;
+    transition: 200ms;
+
+    &:hover {
+        color: rgb(145, 145, 145);
+    }
+}

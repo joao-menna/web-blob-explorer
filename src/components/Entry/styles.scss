@@ -1,0 +1,27 @@
+.folder-link {
+    cursor: pointer;
+    color: rgb(25, 25, 25);
+    transition: 200ms;
+    text-decoration: underline;
+
+    &:hover {
+        color: rgb(77, 77, 77);
+    }
+}
+
+.file-link {
+    color: rgb(25, 25, 25);
+    transition: 200ms;
+
+    &:hover {
+        color: rgb(77, 77, 77);
+    }
+}
+
+.last-modified {
+    color: rgb(25, 25, 25);
+}
+
+.content-length {
+    color: rgb(25, 25, 25);
+}
