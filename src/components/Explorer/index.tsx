@@ -16,9 +16,11 @@ import Box from '@mui/material/Box'
 import { useContext } from 'react'
 import { Entry } from '../Entry'
 import { useFileViewer } from '../../hooks/useFileViewer'
+import { Language } from '../../contexts/language'
 
 export function Explorer() {
   const { rowsPerPage, currentPage } = useContext(MainContext)!
+  const { strings } = useContext(Language)!
   const { blobs, handleFolderClick } = useExplorer()
   const {
     handleRequestSort,
@@ -37,19 +39,21 @@ export function Explorer() {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell width={10}>
+              </TableCell>
               <TableCell>
                 <TableSorter onRequestSort={handleRequestSort} sortProperty={'name'}>
-                  Arquivo
+                  {strings['tableHeaderFile']}
                 </TableSorter>
               </TableCell>
               <TableCell width={160}>
                 <TableSorter onRequestSort={handleRequestSort} sortProperty={'lastModified'}>
-                  Última modificação
+                  {strings['tableHeaderLastModified']}
                 </TableSorter>
               </TableCell>
               <TableCell width={80}>
                 <TableSorter onRequestSort={handleRequestSort} sortProperty={'contentLength'}>
-                  Tamanho
+                  {strings['tableHeaderSize']}
                 </TableSorter>
               </TableCell>
               <TableCell width={80}>

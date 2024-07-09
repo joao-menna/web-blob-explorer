@@ -23,4 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-src/constants/blobstorage.ts
+public/favicon.ico
+src/constants/blobStorage.ts
+src/constants/system.ts

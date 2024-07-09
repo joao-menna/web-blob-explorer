@@ -2,6 +2,7 @@ import { getBlobServiceClient } from '../functions/getBlobServiceClient'
 import { setUrlPrefix } from '../functions/setUrlPrefix'
 import { useContext, useEffect, useState } from 'react'
 import { PREFIX } from '../constants/urlSearchParams'
+import { DELIMITER } from '../constants/Breadcrumbs'
 import { MainContext } from '../contexts/main'
 import { File } from '../interfaces/Folder'
 
@@ -47,7 +48,6 @@ export function useExplorer() {
 
       // const blobsByHierarchy = containerClient
       //   .listBlobsByHierarchy('/', { prefix: currentFolder })
-      //   .byPage({ maxPageSize: maxPages })
 
       // for await (const blob of blobsByHierarchy) {
       // temp
@@ -76,9 +76,9 @@ export function useExplorer() {
       }
 
       filesAndFolders.sort((a, b) => {
-        if (a.name.endsWith('/')) {
+        if (a.name.endsWith(DELIMITER)) {
           return -1;
-        } else if (b.name.endsWith('/')) {
+        } else if (b.name.endsWith(DELIMITER)) {
           return 1;
         } else {
           return a.name.localeCompare(b.name);

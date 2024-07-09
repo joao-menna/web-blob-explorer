@@ -4,9 +4,11 @@ import Breadcrumbs from '@mui/material/Breadcrumbs'
 import { MainContext } from '../../contexts/main'
 import { useContext } from 'react'
 import './styles.scss'
+import { Language } from '../../contexts/language'
 
 export function ExplorerBreadcrumbs() {
   const { currentFolder, setCurrentFolder } = useContext(MainContext)!
+  const { strings } = useContext(Language)!
 
   const getFolders = (fullPath: string) => {
     const splitted = fullPath.replace(/\/$/, '').split(DELIMITER)
@@ -41,7 +43,7 @@ export function ExplorerBreadcrumbs() {
         className='breadcrumb-link'
         onClick={() => handleBreadcrumbClick(currentFolder, 0, '')}
       >
-        Raiz
+        {strings['breadcrumbRoot']}
       </a>
       {getFolders(currentFolder).map((val, idx) => (
         <a
