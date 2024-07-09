@@ -9,12 +9,14 @@ interface IMainContext {
   sorting: 'asc' | 'desc'
   sortingBy: keyof File
   rowsPerPage: number
+  viewingFile: File | undefined
   setCurrentFolder: Dispatch<SetStateAction<string>>
   setCurrentPage: Dispatch<SetStateAction<number>>
   setLoading: Dispatch<SetStateAction<boolean>>
   setSorting: Dispatch<SetStateAction<'asc' | 'desc'>>
   setSortingBy: Dispatch<SetStateAction<keyof File>>
   setRowsPerPage: Dispatch<SetStateAction<number>>
+  setViewingFile: Dispatch<SetStateAction<File | undefined>>
 }
 
 interface ProviderProps {
@@ -29,6 +31,7 @@ export function MainContextProvider({ children }: ProviderProps) {
   const [loading, setLoading] = useState<boolean>(false)
   const [sorting, setSorting] = useState<'asc' | 'desc'>('desc')
   const [sortingBy, setSortingBy] = useState<keyof File>('name')
+
   const [rowsPerPage, setRowsPerPage] = useState<number>(() => {
     const value = localStorage.getItem(ROWS_PER_PAGE_KEY)
     if (value) {
@@ -38,6 +41,8 @@ export function MainContextProvider({ children }: ProviderProps) {
     return 10
   })
 
+  const [viewingFile, setViewingFile] = useState<File | undefined>(undefined)
+
   const defaultValue: IMainContext = {
     currentFolder,
     currentPage,
@@ -45,12 +50,14 @@ export function MainContextProvider({ children }: ProviderProps) {
     sorting,
     sortingBy,
     rowsPerPage,
+    viewingFile,
     setCurrentFolder,
     setCurrentPage,
     setLoading,
     setSorting,
     setSortingBy,
-    setRowsPerPage
+    setRowsPerPage,
+    setViewingFile
   }
 
   return (

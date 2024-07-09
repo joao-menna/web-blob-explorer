@@ -28,7 +28,7 @@ export function ExplorerBreadcrumbs() {
       return
     }
 
-    const index = fullPath.indexOf(folderClicked)
+    const index = fullPath.indexOf(folderClicked) + 1
     const newPath = fullPath.substring(0, index + folderClicked.length)
 
     setUrlPrefix(newPath)

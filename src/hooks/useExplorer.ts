@@ -1,8 +1,9 @@
+import { getBlobServiceClient } from '../functions/getBlobServiceClient'
+import { setUrlPrefix } from '../functions/setUrlPrefix'
 import { useContext, useEffect, useState } from 'react'
+import { PREFIX } from '../constants/urlSearchParams'
 import { MainContext } from '../contexts/main'
 import { File } from '../interfaces/Folder'
-import { setUrlPrefix } from '../functions/setUrlPrefix'
-import { PREFIX } from '../constants/urlSearchParams'
 
 export function useExplorer() {
   const [blobs, setBlobs] = useState<File[]>([])
@@ -31,14 +32,8 @@ export function useExplorer() {
     setLoading(true)
     setBlobs([])
 
-    // const anonymousCredential = new AnonymousCredential()
-
-    // const blobServiceClient = new BlobServiceClient(
-    //   `https://${account}.blob.core.windows.net`,
-    //   anonymousCredential
-    // )
-
-    // const containerClient = blobServiceClient.getContainerClient(container)
+    // const blobServiceClient = getBlobServiceClient()
+    // const containerClient = blobServiceClient.getContainerClient(CONTAINER)
 
     // temp
     const queryPrefix = `prefix=${currentFolder}`
@@ -72,7 +67,8 @@ export function useExplorer() {
             // lastModified: blob.properties.lastModified.toISOString(),
             // temp
             lastModified: blob.properties.lastModified,
-            contentLength: blob.properties.contentLength
+            contentLength: blob.properties.contentLength,
+            contentType: blob.properties.contentType
           }
 
           filesAndFolders.push(file)
@@ -95,7 +91,6 @@ export function useExplorer() {
       console.error('Error listing blobs:', error);
     }
 
-    // await containerClient.delete()
     setLoading(false)
   }
 

@@ -1,5 +1,5 @@
 import { formatDateTime } from '../../functions/formatDateTime'
-import { TableCell, TableRow } from '@mui/material'
+import { Button, TableCell, TableRow } from '@mui/material'
 import { MainContext } from '../../contexts/main'
 import { File } from '../../interfaces/Folder'
 import { filesize } from 'filesize'
@@ -12,7 +12,7 @@ interface EntryProps {
 }
 
 export function Entry({ blob, onFolderClick }: EntryProps) {
-  const { currentFolder } = useContext(MainContext)!
+  const { currentFolder, setViewingFile } = useContext(MainContext)!
 
   return (
     <TableRow>
@@ -35,6 +35,14 @@ export function Entry({ blob, onFolderClick }: EntryProps) {
       <TableCell className='content-length'>
         {blob.type === 'file' && (
           filesize(blob.contentLength!)
+        )}
+      </TableCell>
+      <TableCell>
+        {blob.type === 'file' && (
+          ['text/plain', 'application/pdf'].includes(blob.contentType!) ||
+          blob.contentType?.startsWith('image')
+        ) && (
+          <Button onClick={() => setViewingFile(blob)}>Ver</Button>
         )}
       </TableCell>
     </TableRow>

@@ -15,6 +15,7 @@ import Table from '@mui/material/Table'
 import Box from '@mui/material/Box'
 import { useContext } from 'react'
 import { Entry } from '../Entry'
+import { useFileViewer } from '../../hooks/useFileViewer'
 
 export function Explorer() {
   const { rowsPerPage, currentPage } = useContext(MainContext)!
@@ -25,6 +26,7 @@ export function Explorer() {
     handleChangeRowsPerPage,
     visibleRows
   } = useExplorerTable(blobs)
+  useFileViewer()
 
   return (
     <Box display={'flex'} flexDirection={'column'} gap={2}>
@@ -49,6 +51,8 @@ export function Explorer() {
                 <TableSorter onRequestSort={handleRequestSort} sortProperty={'contentLength'}>
                   Tamanho
                 </TableSorter>
+              </TableCell>
+              <TableCell width={80}>
               </TableCell>
             </TableRow>
           </TableHead>
