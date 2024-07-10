@@ -17,4 +17,4 @@ Web Blob Explorer for Azure Storage static pages
 1. Setup Azurite using Docker (preferrably).
 1. Enter the `local-server` folder using the terminal.
 1. Run `npm i` to install the server dependencies.
-1. Run the server using `node index.js`.
+1. Run the server using `npm start`.
