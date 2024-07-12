@@ -24,9 +24,10 @@ export function useExplorer() {
     }
 
     const prefix = location.search.replace(`?${PREFIX}=`, '')
+    const newPrefix = decodeURIComponent(prefix).replace(/\+/g, ' ')
 
-    if (decodeURIComponent(prefix) !== currentFolder) {
-      setCurrentFolder(decodeURIComponent(prefix))
+    if (newPrefix !== currentFolder) {
+      setCurrentFolder(newPrefix)
       return
     }
 
