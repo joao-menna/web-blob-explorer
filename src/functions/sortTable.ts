@@ -14,6 +14,10 @@ export function sortTable(
     }
 
     if (!a[property] || !b[property] || a.type === 'folder' || b.type === 'folder') {
+      if (b.type === 'folder') {
+        return 1
+      }
+
       return -1
     }
 

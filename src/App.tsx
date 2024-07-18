@@ -21,7 +21,7 @@ export default function App() {
         {(!!TITLE || !!LOGO) && (
           <Box padding={3} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
             {!!TITLE && <Typography variant="h5">{TITLE}</Typography>}
-            {!!LOGO && <img style={{ width: 'auto', height: 'auto', maxWidth: '35%' }} src={LOGO} alt="Logo" />}
+            {!!LOGO && <img style={{ width: 'auto', height: 'auto', maxWidth: '30%' }} src={LOGO} alt="Logo" />}
           </Box>
         )}
         <Paper elevation={3}>
